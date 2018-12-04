@@ -1,20 +1,19 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<meta charset=utf-8>
+        <meta charset="utf-8">
 		<title>TNM084 project</title>
         <link rel="stylesheet" type="text/css" href="css/style.css">
-	</head>
-	<body>
-
         <script src="js/libs/three.min.js"></script>
         <script src="js/libs/jquery.min.js"></script>
+	</head>
+	<body>
+        <script data-src="shaders/vertex.glsl" data-name="world" type="x-shader/x-vertex" id="vertexshader"></script>
+        <script data-src="shaders/fragment.glsl" data-name="world" type="x-shader/x-fragment" id="fragmentshader"></script>
+
+        <script data-src="shaders/noiseFunctions/cellular3D.glsl" data-name="worley3D" type="x-shader/x-vertex" ></script>
+        <script data-src="shaders/noiseFunctions/noise3D.glsl" data-name="simplex3D" type="x-shader/x-vertex" ></script>
         <script src="js/libs/shaderloader.min.js"></script>
-
-        <script data-src="shaders/vertex.glsl" data-name="world"type="x-shader/x-vertex"></script>
-        <script data-src="shaders/fragment.glsl" data-name="world" type="x-shader/x-fragment"></script>
-
-        <script> src = "js/utlities.js"</script>
 		<script src = "js/main.js"> </script>
 	</body>
 </html>

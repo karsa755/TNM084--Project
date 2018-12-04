@@ -1,9 +1,15 @@
 
+
 // Cellular noise ("Worley noise") in 3D in GLSL.
 // Copyright (c) Stefan Gustavson 2011-04-19. All rights reserved.
 // This code is released under the conditions of the MIT license.
 // See LICENSE file for details.
 // https://github.com/stegu/webgl-noise
+
+// Modulo 289 without a division (only multiplications)
+vec3 mod289(vec3 x) {
+  return x - floor(x * (1.0 / 289.0)) * 289.0;
+}
 
 // Modulo 7 without a division
 vec3 mod7(vec3 x) {
@@ -178,44 +184,4 @@ vec2 cellular(vec3 P) {
 	d11.y = min(d11.y,d11.z); // Done! (Phew!)
 	return sqrt(d11.xy); // F1, F2
 #endif
-}
-
-uniform vec3 color;
-uniform vec3 lightPos;
-uniform vec3 cameraPos;
-varying vec3 pos;
-varying vec3 nNormal;
-uniform float time;
-
-varying vec3 posColor;
-varying vec3 nNormalColor;
-
-
-void main()
-{
-    vec2 cell = cellular(nNormal);
-    float cellStep =  smoothstep(0.15,0.25,cell.y - cell.x) ;
-    vec4 outColor = vec4(cellStep, cellStep, cellStep, 1.0);
-    vec3 bloodColor = vec3(1.0, 0.0, 0.0);
-	vec3 waterColor = vec3(0.0, 0.0, 1.0);
-	vec3 noisyColor = mix(bloodColor, waterColor, cellStep);
-
-
-    // phong
-    vec3 normalizedNorm = normalize(nNormalColor);
-    vec3 L = normalize(lightPos - posColor);
-    vec3 R = normalize(-reflect(L,normalizedNorm));
-    vec3 V = normalize(-cameraPos);
-    float n = 2.0;
-
-    
-    vec3 kDiff = vec3(1.0, 1.0, 1.0);
-    vec3 Idiff = vec3(0.8, 0.8, 0.8);
-    vec3 kSpec = vec3(0.0, 1.0, 0.0);
-    vec3 ISpec = vec3(1.0, 1.0, 1.0);
-    vec3 diffuse = kDiff * Idiff * max(dot(L, normalizedNorm),0.0);
-    vec3 spec = kSpec * ISpec * pow(max( dot(V,R), 0.0) , n );
-    vec3 finalColor = diffuse + spec;
-
-    gl_FragColor = vec4(noisyColor * finalColor,1.0);
 }
