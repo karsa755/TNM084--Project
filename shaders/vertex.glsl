@@ -183,25 +183,21 @@ vec2 cellular(vec3 P) {
 varying vec3 pos;
 varying vec3 nNormal;
 uniform float time;
+uniform float displaceObj;
+uniform float displaceStrength;
 
-
-varying vec3 posColor;
-varying vec3 nNormalColor;
 
 void main() 
 {
     float verticalShift = 0.35 * snoise(position*time);
     float displacement = 0.10 * snoise( vec3(time*2.0*position.x, verticalShift, position.z) );
 
-    vec2 cell = cellular(position);
-    float cellStep =  smoothstep(0.15,0.25,cell.y - cell.x) ;
-    displacement = mix(0.38, displacement, cellStep);
-    vec3 newPos = position + position*displacement;
+    vec2 cell = cellular(position) + 0.5* cellular(2.0*position);
+    float cellStep =  smoothstep(0.19,0.21,cell.y - cell.x) ;
+    displacement = mix(displaceObj, displacement, cellStep);
+    vec3 newPos = position + displaceStrength* position*displacement;
     pos = position;
     nNormal = normal;
-
-    posColor = vec3(modelViewMatrix * vec4(newPos, 1.0));       
-    nNormalColor = normalize(normalMatrix * normal);
 
     gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );
 }

@@ -1,9 +1,11 @@
-* {
-    overflow: hidden;
+#body {
     padding:0px;
     margin:0px;
+    overflow-y:hidden;
 }
-canvas {
-    width:100%;
-    height:100%;
+
+.moveGUI{ 
+    position: absolute;
+    top: 4.0em;
+    left: 1em;
 }

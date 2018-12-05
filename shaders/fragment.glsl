@@ -180,42 +180,20 @@ vec2 cellular(vec3 P) {
 #endif
 }
 
-uniform vec3 color;
-uniform vec3 lightPos;
-uniform vec3 cameraPos;
+uniform vec3 heightColor;
+uniform vec3 groundColor;
+
 varying vec3 pos;
 varying vec3 nNormal;
 uniform float time;
 
-varying vec3 posColor;
-varying vec3 nNormalColor;
-
 
 void main()
 {
-    vec2 cell = cellular(nNormal);
-    float cellStep =  smoothstep(0.15,0.25,cell.y - cell.x) ;
+    vec2 cell = cellular(pos);
+    float cellStep =  smoothstep(0.19,0.21,cell.y - cell.x) ;
     vec4 outColor = vec4(cellStep, cellStep, cellStep, 1.0);
-    vec3 bloodColor = vec3(1.0, 0.0, 0.0);
-	vec3 waterColor = vec3(0.0, 0.0, 1.0);
-	vec3 noisyColor = mix(bloodColor, waterColor, cellStep);
+	vec3 noisyColor = mix(heightColor, groundColor, cellStep);
 
-
-    // phong
-    vec3 normalizedNorm = normalize(nNormalColor);
-    vec3 L = normalize(lightPos - posColor);
-    vec3 R = normalize(-reflect(L,normalizedNorm));
-    vec3 V = normalize(-cameraPos);
-    float n = 2.0;
-
-    
-    vec3 kDiff = vec3(1.0, 1.0, 1.0);
-    vec3 Idiff = vec3(0.8, 0.8, 0.8);
-    vec3 kSpec = vec3(0.0, 1.0, 0.0);
-    vec3 ISpec = vec3(1.0, 1.0, 1.0);
-    vec3 diffuse = kDiff * Idiff * max(dot(L, normalizedNorm),0.0);
-    vec3 spec = kSpec * ISpec * pow(max( dot(V,R), 0.0) , n );
-    vec3 finalColor = diffuse + spec;
-
-    gl_FragColor = vec4(noisyColor * finalColor,1.0);
+    gl_FragColor = vec4(noisyColor,1.0);
 }
