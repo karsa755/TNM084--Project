@@ -27,7 +27,10 @@ SHADER_LOADER.load(
         gui.addColor(mainText,'heightColor');
         gui.addColor(mainText,'groundColor');
         gui.add(mainText, 'displacementHeight', 0, 1);
-        gui.add(mainText, 'displacementStrength', 0, 1);
+        gui.add(mainText, 'displacementStrength', 0, 0.2);
+        gui.add(mainText, 'landClumping', 0.0, 5.0);
+        gui.add(mainText,'HeightGroundRatio', 0.1, 0.4);
+        gui.add(mainText, 'wireframe');
         var customContainer = $('.moveGUI').append($(gui.domElement));
 
         material = new THREE.ShaderMaterial( {
@@ -39,6 +42,8 @@ SHADER_LOADER.load(
                 time: {type:'float', value: time},
                 displaceObj: {type:'float', value: mainText.displacementHeight},
                 displaceStrength: {type:'float', value: mainText.displacementStrength},
+                noiseSize: {type:'float', value: mainText.landSpread},
+                HGratio: {type:'float', value: mainText.HeightGroundRatio},
             },
         
             vertexShader:   simplex3D + worldVertexhader,
@@ -58,6 +63,9 @@ SHADER_LOADER.load(
             material.uniforms.time.value = clock.getElapsedTime();
             material.uniforms.displaceObj.value = mainText.displacementHeight;
             material.uniforms.displaceStrength.value = mainText.displacementStrength;
+            material.uniforms.noiseSize.value = mainText.landClumping;
+            material.uniforms.HGratio.value = mainText.HeightGroundRatio;
+            material.wireframe = mainText.wireframe;
             renderer.render( scene, camera );
         };
 
@@ -68,9 +76,12 @@ SHADER_LOADER.load(
 );
 
 var FizzyText = function() {
-    this.message = 'dat.gui';
+    this.message = 'Planet editor';
     this.displacementHeight = 0.1;
     this.displacementStrength = 0.1;
+    this.landClumping = 1.0;
+    this.HeightGroundRatio = 0.2;
+    this.wireframe = false;
     this.heightColor ="rgb(255,0,0)"; 
     this.groundColor ="rgb(0,0,255)";  
 };

@@ -186,14 +186,16 @@ uniform vec3 groundColor;
 varying vec3 pos;
 varying vec3 nNormal;
 uniform float time;
+uniform float noiseSize;
+uniform float HGratio;
+
 
 
 void main()
 {
-    vec2 cell = cellular(pos);
-    float cellStep =  smoothstep(0.19,0.21,cell.y - cell.x) ;
-    vec4 outColor = vec4(cellStep, cellStep, cellStep, 1.0);
-	vec3 noisyColor = mix(heightColor, groundColor, cellStep);
+	float height = snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize); 
+	float heightStep = smoothstep(HGratio - 0.01, HGratio + 0.01, height);
+	vec3 noisyColor = mix(heightColor, groundColor, heightStep);
 
     gl_FragColor = vec4(noisyColor,1.0);
 }
