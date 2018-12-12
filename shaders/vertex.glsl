@@ -185,23 +185,18 @@ varying vec3 nNormal;
 
 uniform float time;
 uniform float displaceObj;
-uniform float displaceStrength;
 uniform float noiseSize;
 uniform float HGratio;
 
 
 void main() 
 {
-	//might add some noise to the land itself, so it doesnt look so bland.
-	//also, try to use cellular noice for the displacement of the "water"
-    float verticalShift = 0.35 * snoise(position*time);
-    float displacement = 0.10 * snoise( vec3(time*2.0*position.x, verticalShift, position.z) );
-
-	float height = snoise(position/ noiseSize) + 0.5*snoise(position*2.0/ noiseSize) + 0.25*snoise(position*4.0/ noiseSize) + 0.125*snoise(position*8.0/ noiseSize); 
+	float groundHeight = 0.0;
+	float height = snoise(position/ noiseSize) + 0.5*snoise(position*2.0/ noiseSize) + 0.25*snoise(position*4.0/ noiseSize) + 0.125*snoise(position*8.0/ noiseSize);
+	height = 2.0 * abs(mod(height, 1.0)-0.5);
 	float heightStep = smoothstep(HGratio - 0.01, HGratio + 0.01, height);
-
-    displacement = mix(displaceObj, displacement, heightStep);
-    vec3 newPos = position + displaceStrength* position*displacement;
+    float displacement = mix(displaceObj, groundHeight, 0.5*heightStep);
+    vec3 newPos = position + 0.1* position*displacement;
     pos = position;
     nNormal = normal;
 

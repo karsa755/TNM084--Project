@@ -188,14 +188,18 @@ varying vec3 nNormal;
 uniform float time;
 uniform float noiseSize;
 uniform float HGratio;
+uniform float colorNoiseSize;
 
 
 
 void main()
 {
 	float height = snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize); 
+	float heightNoise = snoise(pos / colorNoiseSize) + 0.5 * snoise(2.0 * pos / colorNoiseSize) + 0.25 * snoise(4.0 * pos / colorNoiseSize) + 0.125 * snoise(8.0 * pos / colorNoiseSize);
+	height = 2.0 * abs(mod(height, 1.0)-0.5);
 	float heightStep = smoothstep(HGratio - 0.01, HGratio + 0.01, height);
-	vec3 noisyColor = mix(heightColor, groundColor, heightStep);
+	vec3 noisyColor = mix(heightColor + 0.15*heightNoise, groundColor, heightStep);
+	
 
     gl_FragColor = vec4(noisyColor,1.0);
 }

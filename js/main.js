@@ -16,20 +16,19 @@ SHADER_LOADER.load(
         clock = new THREE.Clock();
         var worldVertexhader = data.world.vertex;
         var worldFragmentShader = data.world.fragment;
-        
 
         var worley3D = data.worley3D.vertex;
         var simplex3D = data.simplex3D.vertex;
         
         mainText = new FizzyText();
-        var gui = new dat.GUI({ autoPlace: false, width:400 });
+        var gui = new dat.GUI({ autoPlace: false, width:350 });
         gui.add(mainText, 'message');
         gui.addColor(mainText,'heightColor');
         gui.addColor(mainText,'groundColor');
-        gui.add(mainText, 'displacementHeight', 0, 1);
-        gui.add(mainText, 'displacementStrength', 0, 0.2);
-        gui.add(mainText, 'landClumping', 0.0, 5.0);
-        gui.add(mainText,'HeightGroundRatio', 0.1, 0.4);
+        gui.add(mainText,'heightColorVariation', 0.01, 1.0);
+        gui.add(mainText, 'displacementHeight', 0.0, 1.0);
+        gui.add(mainText, 'landClumping', 0.01, 10.0);
+        gui.add(mainText,'HeightGroundRatio', -0.01, 1.01);
         gui.add(mainText, 'wireframe');
         var customContainer = $('.moveGUI').append($(gui.domElement));
 
@@ -41,9 +40,9 @@ SHADER_LOADER.load(
                 groundColor: { type: 'v3', value: new THREE.Color(mainText.groundColor) },
                 time: {type:'float', value: time},
                 displaceObj: {type:'float', value: mainText.displacementHeight},
-                displaceStrength: {type:'float', value: mainText.displacementStrength},
                 noiseSize: {type:'float', value: mainText.landSpread},
                 HGratio: {type:'float', value: mainText.HeightGroundRatio},
+                colorNoiseSize: {type:'float', value: mainText.heightColorVariation},
             },
         
             vertexShader:   simplex3D + worldVertexhader,
@@ -62,9 +61,9 @@ SHADER_LOADER.load(
             material.uniforms.groundColor.value = new THREE.Color(mainText.groundColor);
             material.uniforms.time.value = clock.getElapsedTime();
             material.uniforms.displaceObj.value = mainText.displacementHeight;
-            material.uniforms.displaceStrength.value = mainText.displacementStrength;
             material.uniforms.noiseSize.value = mainText.landClumping;
             material.uniforms.HGratio.value = mainText.HeightGroundRatio;
+            material.uniforms.colorNoiseSize.value = mainText.heightColorVariation;
             material.wireframe = mainText.wireframe;
             renderer.render( scene, camera );
         };
@@ -78,12 +77,12 @@ SHADER_LOADER.load(
 var FizzyText = function() {
     this.message = 'Planet editor';
     this.displacementHeight = 0.1;
-    this.displacementStrength = 0.1;
     this.landClumping = 1.0;
-    this.HeightGroundRatio = 0.2;
+    this.HeightGroundRatio = 0.5;
     this.wireframe = false;
-    this.heightColor ="rgb(255,0,0)"; 
-    this.groundColor ="rgb(0,0,255)";  
+    this.heightColor ="rgb(96,128,56)";
+    this.heightColorVariation = 0.5;
+    this.groundColor ="rgb(0,47,75)";  
 };
 
 
