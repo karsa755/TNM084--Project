@@ -2,9 +2,10 @@
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 var controls = new THREE.OrbitControls( camera );
+controls.maxDistance = 2.5;
 var radius = 1.0;
 var time = 0.0;
-var renderer = new THREE.WebGLRenderer({antialias: true});
+var renderer = new THREE.WebGLRenderer({antialias: true}); //have display aliasing issues, probably
 renderer.setSize( window.innerWidth, window.innerHeight );
 var geometry = new THREE.SphereGeometry( radius, 32, 32 );
 var geometryClouds = new THREE.SphereGeometry(radius*1.01, 32, 32);
@@ -28,13 +29,14 @@ SHADER_LOADER.load(
         gui.add(mainText, 'message');
         gui.addColor(mainText,'heightColor');
         gui.addColor(mainText,'groundColor');
+        gui.addColor(mainText,'coastColor');
         gui.addColor(mainText,'cloudColor');
         gui.add(mainText,'heightColorVariation', 0.01, 1.0);
         gui.add(mainText, 'displacementHeight', 0.0, 1.0);
         gui.add(mainText, 'landClumping', 0.01, 10.0);
         gui.add(mainText, 'cloudClumping', 0.01, 0.5);
         gui.add(mainText, 'cloudSpeed', 0.0, 0.1);
-        gui.add(mainText,'HeightGroundRatio', -0.01, 1.01);
+        gui.add(mainText,'HeightGroundRatio', -0.21, 1.21);
         gui.add(mainText, 'wireframe');
         gui.add(mainText, 'clouds');
         var customContainer = $('.moveGUI').append($(gui.domElement));
@@ -45,6 +47,7 @@ SHADER_LOADER.load(
         
                 heightColor: { type: 'v3', value: new THREE.Color(mainText.heightColor) },
                 groundColor: { type: 'v3', value: new THREE.Color(mainText.groundColor) },
+                coastColor: { type: 'v3', value: new THREE.Color(mainText.coastColor) },
                 time: {type:'float', value: time},
                 displaceObj: {type:'float', value: mainText.displacementHeight},
                 noiseSize: {type:'float', value: mainText.landSpread},
@@ -78,13 +81,14 @@ SHADER_LOADER.load(
         scene.add(worldSphere);
         
 
-        camera.position.z = 5;    
+        camera.position.z = 2.5;    
        
         var animate = function () {
             requestAnimationFrame( animate );
             controls.update();
             material.uniforms.heightColor.value = new THREE.Color(mainText.heightColor);
             material.uniforms.groundColor.value = new THREE.Color(mainText.groundColor);
+            material.uniforms.coastColor.value = new THREE.Color(mainText.coastColor);
             materialCloud.uniforms.cloudColor.value = new THREE.Color(mainText.cloudColor);
             material.uniforms.time.value = clock.getElapsedTime();
             materialCloud.uniforms.time.value = clock.getElapsedTime();
@@ -118,8 +122,9 @@ var FizzyText = function() {
     this.heightColor ="rgb(96,128,56)";
     this.heightColorVariation = 0.5;
     this.cloudSpeed = 0.02;
-    this.groundColor ="rgb(0,47,75)"; 
-    this.cloudColor ="rgb(221,231,238)";  
+    this.groundColor ="rgb(0,119,190)"; 
+    this.cloudColor ="rgb(221,231,238)";
+    this.coastColor ="rgb(194,178,128)";  
 };
 
 

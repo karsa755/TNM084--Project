@@ -182,6 +182,7 @@ vec2 cellular(vec3 P) {
 
 uniform vec3 heightColor;
 uniform vec3 groundColor;
+uniform vec3 coastColor;
 
 varying vec3 pos;
 varying vec3 nNormal;
@@ -194,12 +195,14 @@ uniform float colorNoiseSize;
 
 void main()
 {
-	vec3 snow = vec3(0.9, 0.9, 0.9);
+	
 	float height = snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize); 
 	float colorNoise = snoise(pos / colorNoiseSize) + 0.5 * snoise(2.0 * pos / colorNoiseSize) + 0.25 * snoise(4.0 * pos / colorNoiseSize) + 0.125 * snoise(8.0 * pos / colorNoiseSize);
 	height = 2.0 * abs(mod(height, 1.0)-0.5);
-	float heightStep = smoothstep(HGratio - 0.01, HGratio + 0.01, height);
+	float heightStep = smoothstep(HGratio - 0.2, HGratio + 0.2, height);
 
-	vec3 finalColor = mix(heightColor + 0.15*colorNoise, groundColor, heightStep);
+	vec3 groundGradient = mix(coastColor, groundColor, smoothstep(0.6,1.0, heightStep));
+
+	vec3 finalColor = mix(heightColor + 0.15*colorNoise, groundGradient, heightStep);
     gl_FragColor = vec4( finalColor  ,1.0);
 }
