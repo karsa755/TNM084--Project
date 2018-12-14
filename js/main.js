@@ -9,9 +9,11 @@ var renderer = new THREE.WebGLRenderer({antialias: true}); //have display aliasi
 renderer.setSize( window.innerWidth, window.innerHeight );
 var geometry = new THREE.SphereGeometry( radius, 32, 32 );
 var geometryClouds = new THREE.SphereGeometry(radius*1.01, 32, 32);
+var geoSun = new THREE.SphereGeometry(radius*2.0, 32, 32);
 var material, mainText, materialCloud;
-var clock, light;
-var lightPos = new THREE.Vector3(0.0, 0.0 ,5.0);
+var clock;
+var lightPos = new THREE.Vector3(-5.0, -5.0, 0.0);
+var sun, clouds, worldSphere;
 SHADER_LOADER.load(
     function (data)
     {  
@@ -41,6 +43,7 @@ SHADER_LOADER.load(
         gui.add(mainText, 'clouds');
         var customContainer = $('.moveGUI').append($(gui.domElement));
 
+
         material = new THREE.ShaderMaterial( {
 
             uniforms: {
@@ -48,6 +51,8 @@ SHADER_LOADER.load(
                 heightColor: { type: 'v3', value: new THREE.Color(mainText.heightColor) },
                 groundColor: { type: 'v3', value: new THREE.Color(mainText.groundColor) },
                 coastColor: { type: 'v3', value: new THREE.Color(mainText.coastColor) },
+                cameraPos: {type:'v3', value: camera.position},
+                lightPos: {type:'v3', value: lightPos},
                 time: {type:'float', value: time},
                 displaceObj: {type:'float', value: mainText.displacementHeight},
                 noiseSize: {type:'float', value: mainText.landSpread},
@@ -75,13 +80,16 @@ SHADER_LOADER.load(
             fragmentShader: simplex3D + cloudFragmentShader,
         } );
         materialCloud.transparent = true;
-        var worldSphere = new THREE.Mesh( geometry, material );
-        var clouds = new THREE.Mesh(geometryClouds, materialCloud);
+        var materialSun = new THREE.MeshBasicMaterial( {color: 0xffff00} );
+        worldSphere = new THREE.Mesh( geometry, material );
+        clouds = new THREE.Mesh(geometryClouds, materialCloud);
+        sun = new THREE.Mesh(geoSun, materialSun);
+        
         scene.add(clouds);
         scene.add(worldSphere);
-        
-
-        camera.position.z = 2.5;    
+        scene.add(sun);
+        sun.position.set(lightPos.x, lightPos.y, lightPos.z);
+        camera.position.z = 2.5; 
        
         var animate = function () {
             requestAnimationFrame( animate );
@@ -98,6 +106,7 @@ SHADER_LOADER.load(
             materialCloud.uniforms.noiseSize.value = mainText.cloudClumping;
             materialCloud.uniforms.timeSpeed.value = mainText.cloudSpeed;
             material.uniforms.HGratio.value = mainText.HeightGroundRatio;
+            //material.uniforms.cameraPos.value = camera.position;
             material.uniforms.colorNoiseSize.value = mainText.heightColorVariation;
             material.wireframe = mainText.wireframe;
             let checkClouds = mainText.clouds ? 1.0 : 0.0;

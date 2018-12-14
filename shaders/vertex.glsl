@@ -181,16 +181,25 @@ vec2 cellular(vec3 P) {
 }
 
 varying vec3 pos;
-varying vec3 nNormal;
+varying vec3 lightDir;
+varying vec3 interpolatedNormal;
+varying vec3 eyeDir;
 
 uniform float time;
 uniform float displaceObj;
 uniform float noiseSize;
 uniform float HGratio;
-
+uniform vec3 lightPos; 
+uniform vec3 cameraPos; //this needs to be updated
 
 void main() 
 {
+
+	vec3 extraPos = mat3(modelViewMatrix) * position;
+	lightDir = normalize( mat3(modelViewMatrix) * lightPos - extraPos);
+	interpolatedNormal = normalize(vec3(normalMatrix * vec3(normal) ));
+	eyeDir = normalize( mat3(modelViewMatrix) * cameraPos - extraPos);
+
 	float groundHeight = 0.0;
 	float height = snoise(position/ noiseSize) + 0.5*snoise(position*2.0/ noiseSize) + 0.25*snoise(position*4.0/ noiseSize) + 0.125*snoise(position*8.0/ noiseSize);
 	height = 2.0 * abs(mod(height, 1.0)-0.5);
@@ -199,6 +208,5 @@ void main()
 
     vec3 newPos = position + 0.05 * normal*displacement;
     pos = position;
-    nNormal = normal;
     gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );
 }
