@@ -195,10 +195,10 @@ void main()
 	float height = snoise(position/ noiseSize) + 0.5*snoise(position*2.0/ noiseSize) + 0.25*snoise(position*4.0/ noiseSize) + 0.125*snoise(position*8.0/ noiseSize);
 	height = 2.0 * abs(mod(height, 1.0)-0.5);
 	float heightStep = smoothstep(HGratio - 0.01, HGratio + 0.01, height);
-    float displacement = mix(displaceObj, groundHeight, 0.5*heightStep);
-    vec3 newPos = position + 0.1* position*displacement;
+    float displacement = mix(displaceObj, groundHeight, heightStep);
+
+    vec3 newPos = position + 0.05 * position*displacement;
     pos = position;
     nNormal = normal;
-
     gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );
 }

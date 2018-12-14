@@ -1,6 +1,6 @@
 
 void main()
 {
-    vec3 startColor = vec3(0.0, 0.0, 1.0);
-    gl_FragColor = vec4(startColor,1.0);
+    vec3 finalColor = vec3(0.0, 0.0, 0.5);
+    gl_FragColor = vec4(finalColor,1.0);
 }
