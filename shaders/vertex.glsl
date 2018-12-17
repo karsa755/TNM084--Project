@@ -190,7 +190,7 @@ uniform float displaceObj;
 uniform float noiseSize;
 uniform float HGratio;
 uniform vec3 lightPos; 
-uniform vec3 cameraPos; //this needs to be updated
+uniform vec3 cameraPos; 
 
 void main() 
 {
@@ -208,5 +208,5 @@ void main()
 
     vec3 newPos = position + 0.05 * normal*displacement;
     pos = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4( newPos, 1.0 );
+    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
 }
