@@ -5,26 +5,29 @@ var controls = new THREE.OrbitControls( camera );
 controls.maxDistance = 4.0;
 controls.minDistance = 1.5;
 var radius = 1.0;
-var outerRad = radius * 1.10;
+var outerRad = radius * 1.05;
 var time = 0.0;
 var renderer = new THREE.WebGLRenderer({antialias: true}); //have display aliasing issues, probably
+var segmentSize = 64;
 renderer.setSize( window.innerWidth, window.innerHeight );
-var geometry = new THREE.SphereGeometry( radius, 32, 32 );
-var geometryClouds = new THREE.SphereGeometry(radius*1.001, 32, 32);
-var geometryAtmosphereSky = new THREE.SphereGeometry(outerRad, 32, 32);
-var geometryAtmosphereGround = new THREE.SphereGeometry(radius * 1.053, 32, 32);
+var geometry = new THREE.SphereGeometry( radius, segmentSize,segmentSize );
+var geometryClouds = new THREE.SphereGeometry(radius*1.001, segmentSize, segmentSize);
+var geometryAtmosphereSky = new THREE.SphereGeometry(outerRad, segmentSize, segmentSize);
+var geometryAtmosphereGround = new THREE.SphereGeometry(radius * 1.053, segmentSize, segmentSize);
 var geoSun = new THREE.SphereGeometry(radius*0.075, 32, 32);
 var material, mainText, materialCloud, materialAtmosphereSky, materialAtmosphereGround;
 var clock;
 var lightPos = new THREE.Vector3(-5.0, -5.0, 0.0);
 var sun, clouds, worldSphere, atmoSphereSky, atmoSphereGround;
+var dTime = 0.0;
+var prevTime = 0.0;
 
 var atmosphereVariables = {
     Kr: 0.0025,
     Km: 0.0010,
     ESun: 20.0,
     g: -0.950,
-    innerRadius: radius * 1.05,
+    innerRadius: radius * 1.053,
     outerRadius: outerRad,
     wavelength: new THREE.Vector3(0.650, 0.570, 0.475),
     scale: radius / (outerRad - radius),
@@ -161,11 +164,14 @@ SHADER_LOADER.load(
         scene.add(atmoSphereSky);
         scene.add(atmoSphereGround);
         sun.position.set(lightPos.x, lightPos.y, lightPos.z);
-        camera.position.z = 3.0; 
-       
+        camera.position.z = 4.0; 
+        prevTime = clock.getElapsedTime();
         var animate = function () {
+            dTime += clock.getElapsedTime() - prevTime;
+            
             requestAnimationFrame( animate );
             controls.update();
+            //variables that needs to be updated for the GUI and in the shader.
             material.uniforms.heightColor.value = new THREE.Color(mainText.heightColor);
             material.uniforms.groundColor.value = new THREE.Color(mainText.groundColor);
             material.uniforms.coastColor.value = new THREE.Color(mainText.coastColor);
@@ -173,9 +179,9 @@ SHADER_LOADER.load(
             materialAtmosphereSky.uniforms.displaceObj.value = new THREE.Color(mainText.displacementHeight);
             materialAtmosphereGround.uniforms.displaceObj.value = new THREE.Color(mainText.displacementHeight);
             materialCloud.uniforms.cloudColor.value = new THREE.Color(mainText.cloudColor);
-            material.uniforms.time.value = clock.getElapsedTime();
-            materialCloud.uniforms.time.value = clock.getElapsedTime();
-            materialAtmosphereSky.uniforms.time.value = clock.getElapsedTime();
+            material.uniforms.time.value = dTime;
+            materialCloud.uniforms.time.value = dTime;
+            materialAtmosphereSky.uniforms.time.value = dTime;
             material.uniforms.displaceObj.value = mainText.displacementHeight;
             materialCloud.uniforms.displaceObj.value = mainText.displacementHeight;
             material.uniforms.noiseSize.value = mainText.landClumping;
@@ -188,7 +194,9 @@ SHADER_LOADER.load(
             let checkAtmosphere = mainText.atmosphere ? 1.0 : 0.0;
             materialCloud.uniforms.isClouds.value = checkClouds;
             materialAtmosphereGround.uniforms.atmosBool.value = checkAtmosphere;
+            materialAtmosphereSky.uniforms.atmosBool.value = checkAtmosphere;
             renderer.render( scene, camera );
+            prevTime = clock.getElapsedTime();
         };
 
         animate();

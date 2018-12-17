@@ -10,6 +10,6 @@ void main()
 	vec3 day = intensity * color;
 
 	vec3 night = fNightScale * intensity * intensity * intensity * (1.0 - color);
-	gl_FragColor = vec4( atmoColor * atmosBool * (day + night + secondaryColor), 0.5); 
+	gl_FragColor = vec4( atmoColor * (day + night + secondaryColor), atmosBool * 0.5); 
 
 }
