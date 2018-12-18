@@ -59,6 +59,7 @@ SHADER_LOADER.load(
         gui.addColor(mainText,'coastColor');
         gui.addColor(mainText,'cloudColor');
         gui.addColor(mainText,'atmosphereColor');
+        gui.add(mainText, 'groundColorVariation', 0.01, 1.0);
         gui.add(mainText,'heightColorVariation', 0.01, 1.0);
         gui.add(mainText, 'displacementHeight', 0.0, 1.0);
         gui.add(mainText, 'landClumping', 0.01, 10.0);
@@ -85,6 +86,7 @@ SHADER_LOADER.load(
                 noiseSize: {type:'float', value: mainText.landSpread},
                 HGratio: {type:'float', value: mainText.HeightGroundRatio},
                 colorNoiseSize: {type:'float', value: mainText.heightColorVariation},
+                colorGroundNoiseSize: {type:'float', value: mainText.groundColorVariation},
             },
         
             vertexShader:   simplex3D + worldVertexhader,
@@ -166,6 +168,7 @@ SHADER_LOADER.load(
             materialAtmosphereGround.uniforms.displaceObj.value = new THREE.Color(mainText.displacementHeight);
             materialCloud.uniforms.cloudColor.value = new THREE.Color(mainText.cloudColor);
             material.uniforms.time.value = dTime;
+            material.uniforms.colorGroundNoiseSize.value = mainText.groundColorVariation;
             materialCloud.uniforms.time.value = dTime;
             material.uniforms.displaceObj.value = mainText.displacementHeight;
             materialCloud.uniforms.displaceObj.value = mainText.displacementHeight;
@@ -199,12 +202,13 @@ var FizzyText = function() {
     this.clouds = true;
     this.atmosphere = true;
     this.heightColor ="rgb(96,128,56)";
-    this.heightColorVariation = 0.5;
+    this.heightColorVariation = 0.25;
     this.cloudSpeed = 0.02;
     this.groundColor ="rgb(0,119,190)"; 
     this.cloudColor ="rgb(221,231,238)";
     this.coastColor ="rgb(194,178,128)";
-    this.atmosphereColor ="rgb(20,20,80)";  
+    this.atmosphereColor ="rgb(20,20,80)";
+    this.groundColorVariation = 0.25;  
 };
 
 
