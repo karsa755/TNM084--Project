@@ -1,11 +1,7 @@
-//
-// Atmospheric scattering vertex shader
-//
+// Atmospheric scattering ground vertex shader
 // Author: Sean O'Neil
-//
 // Copyright (c) 2004 Sean O'Neil
-//
-
+// found at http://jsfiddle.net/VsWb9/770/
 varying vec3 lightDir;
 varying vec3 interpolatedNormal;
 varying vec3 eyeDir;
@@ -45,9 +41,10 @@ float scaleF(float fCos)
 
 void main() 
 {
-    vec3 newPos = position + 0.05 * normal*displaceObj;
     vec3 extraPos = mat3(modelViewMatrix) * position;
 	lightDir = normalize( mat3(modelViewMatrix) * lightPos - extraPos);
+	interpolatedNormal = normalize(vec3(normalMatrix * vec3(normal) ));
+	eyeDir = normalize( mat3(modelViewMatrix) * cameraPos - extraPos);
 
     vec3 v3Ray = position - cameraPos;
 	float fFar = length(v3Ray);
