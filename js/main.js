@@ -10,6 +10,7 @@ var time = 0.0;
 var renderer = new THREE.WebGLRenderer({antialias: true}); //might need to look at supersampling
 var segmentSize = 128;
 renderer.setSize( window.innerWidth, window.innerHeight );
+//create the geometrys
 var geometry = new THREE.SphereGeometry( radius, segmentSize,segmentSize );
 var geometryClouds = new THREE.SphereGeometry(radius*1.001, segmentSize, segmentSize);
 var geometryAtmosphereGround = new THREE.SphereGeometry(radius * 1.053, segmentSize, segmentSize);
@@ -144,11 +145,12 @@ SHADER_LOADER.load(
         materialCloud.transparent = true;
         materialAtmosphereGround.transparent = true;
         var materialSun = new THREE.MeshBasicMaterial( {color: 0xfcd440 } );
+        //create all meshes
         worldSphere = new THREE.Mesh( geometry, material );
         clouds = new THREE.Mesh(geometryClouds, materialCloud);
         atmoSphereGround = new THREE.Mesh(geometryAtmosphereGround, materialAtmosphereGround);
         sun = new THREE.Mesh(geoSun, materialSun);
-        
+        //add meshes to scene
         scene.add(clouds);
         scene.add(worldSphere);
         scene.add(sun);

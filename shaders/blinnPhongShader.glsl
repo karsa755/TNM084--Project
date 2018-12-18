@@ -13,6 +13,6 @@ vec3 BlinnPhongShading(vec3 V, vec3 L, vec3 N)
 	}
                           
 	vec3 shadedcolor = diffuseColor * dotNL + specularColor * dotNH;
-	//return vec3(0.0, 0.0, 0.0);
+	
 	return shadedcolor;
 }

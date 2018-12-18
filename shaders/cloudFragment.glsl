@@ -13,13 +13,13 @@ uniform float isClouds;
 
 void main()
 {
-    
+    //fractal noise for the clouds, with an offset to "move" them
     float cloudNoise = isClouds * (snoise( (pos + timeSpeed * time) / noiseSize) + 
     0.5*snoise( (pos*2.0 + timeSpeed * time) / noiseSize) + 
     0.25*snoise( (pos*4.0 + timeSpeed * time) / noiseSize) + 
     0.125*snoise( (pos*8.0 + timeSpeed * time) / noiseSize));
     vec3 finalColor = cloudColor * cloudNoise;
-    vec3 blinnPhong = BlinnPhongShading(eyeDir, lightDir, interpolatedNormal);
+    vec3 blinnPhong = BlinnPhongShading(eyeDir, lightDir, interpolatedNormal); //also add blinn phong shading
 
     gl_FragColor = vec4( finalColor + blinnPhong , 0.35);
 }
