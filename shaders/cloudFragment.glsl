@@ -14,10 +14,7 @@ uniform float isClouds;
 void main()
 {
     //fractal noise for the clouds, with an offset to "move" them
-    float cloudNoise = isClouds * (snoise( (pos + timeSpeed * time) / noiseSize) + 
-    0.5*snoise( (pos*2.0 + timeSpeed * time) / noiseSize) + 
-    0.25*snoise( (pos*4.0 + timeSpeed * time) / noiseSize) + 
-    0.125*snoise( (pos*8.0 + timeSpeed * time) / noiseSize));
+    float cloudNoise = isClouds * (fractalSimplexNoise(pos, noiseSize, time * timeSpeed));
     vec3 finalColor = cloudColor * cloudNoise;
     vec3 blinnPhong = BlinnPhongShading(eyeDir, lightDir, interpolatedNormal); //also add blinn phong shading
 

@@ -12,21 +12,17 @@ uniform float HGratio;
 uniform vec3 lightPos; 
 uniform vec3 cameraPos; 
 
-float fractalSimplexNoise(vec3 pos, float noiseSize)
-{
-	return (snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize));
-}
 
 void main() 
 {
-
+	float offset = 1.0;
 	vec3 extraPos = mat3(modelViewMatrix) * position;
 	lightDir = normalize( mat3(modelViewMatrix) * lightPos - extraPos);
 	interpolatedNormal = normalize(vec3(normalMatrix * vec3(normal) ));
 	eyeDir = normalize( mat3(modelViewMatrix) * cameraPos - extraPos);
 
 	float groundHeight = 0.0;
-	float height = fractalSimplexNoise(position, noiseSize);
+	float height = fractalSimplexNoise(position, noiseSize, offset);
 	height = 2.0 * abs(mod(height, 1.0)-0.5);
 	float heightStep = smoothstep(HGratio - 0.2, HGratio + 0.2, height);
     float displacement = mix(displaceObj, groundHeight, heightStep);

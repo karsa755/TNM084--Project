@@ -50,7 +50,7 @@ SHADER_LOADER.load(
 
         var worley3D = data.worley3D.vertex;
         var simplex3D = data.simplex3D.vertex;
-        var phongShader = data.phong.fragment;
+        var utilsShader = data.utils.fragment;
         
         mainText = new FizzyText();
         var gui = new dat.GUI({ autoPlace: false, width:350 });
@@ -90,8 +90,8 @@ SHADER_LOADER.load(
                 colorGroundNoiseSize: {type:'float', value: mainText.groundColorVariation},
             },
         
-            vertexShader:   simplex3D + worldVertexhader,
-            fragmentShader: phongShader + simplex3D + worldFragmentShader,
+            vertexShader:   simplex3D + utilsShader +  worldVertexhader,
+            fragmentShader:  simplex3D + utilsShader + worldFragmentShader,
         } );
 
         materialCloud = new THREE.ShaderMaterial( {
@@ -108,8 +108,8 @@ SHADER_LOADER.load(
                 lightPos: {type:'v3', value: lightPos},
             },
 
-            vertexShader:   simplex3D + cloudVertexShader,
-            fragmentShader: phongShader + simplex3D + cloudFragmentShader,
+            vertexShader:  cloudVertexShader,
+            fragmentShader:  simplex3D +  utilsShader + cloudFragmentShader,
         } );
         var atmoUni = {
             time: {type:'float', value: time},
@@ -140,7 +140,7 @@ SHADER_LOADER.load(
 
             uniforms: atmoUni,
             vertexShader:   atmosphereGroundVertexShader,
-            fragmentShader: phongShader + atmosphereGroundFragmentShader,
+            fragmentShader: simplex3D + utilsShader + atmosphereGroundFragmentShader,
         } );
         materialCloud.transparent = true;
         materialAtmosphereGround.transparent = true;
@@ -167,6 +167,7 @@ SHADER_LOADER.load(
             material.uniforms.heightColor.value = new THREE.Color(mainText.heightColor);
             material.uniforms.groundColor.value = new THREE.Color(mainText.groundColor);
             material.uniforms.coastColor.value = new THREE.Color(mainText.coastColor);
+            materialAtmosphereGround.uniforms.atmoColor.value = new THREE.Color(mainText.atmosphereColor);
             materialAtmosphereGround.uniforms.displaceObj.value = new THREE.Color(mainText.displacementHeight);
             materialCloud.uniforms.cloudColor.value = new THREE.Color(mainText.cloudColor);
             material.uniforms.time.value = dTime;
@@ -180,6 +181,8 @@ SHADER_LOADER.load(
             material.uniforms.HGratio.value = mainText.HeightGroundRatio;
             material.uniforms.colorNoiseSize.value = mainText.heightColorVariation;
             material.wireframe = mainText.wireframe;
+            materialCloud.wireframe = mainText.wireframe;
+            materialAtmosphereGround.wireframe = mainText.wireframe;
             let checkClouds = mainText.clouds ? 1.0 : 0.0;
             let checkAtmosphere = mainText.atmosphere ? 1.0 : 0.0;
             materialCloud.uniforms.isClouds.value = checkClouds;

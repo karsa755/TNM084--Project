@@ -15,18 +15,14 @@ uniform float HGratio;
 uniform float colorNoiseSize;
 uniform float colorGroundNoiseSize;
 
-float fractalSimplexNoise(vec3 pos, float noiseSize)
-{
-	//create simplex noise based on position and input parameter from GUI
-	return (snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize));
-}
+
 
 void main()
 {
-	
-	float height = fractalSimplexNoise(pos, noiseSize); 
-	float colorNoise = fractalSimplexNoise(pos, colorNoiseSize);
-	float colorNoiseGround = fractalSimplexNoise(pos, colorGroundNoiseSize);
+	float offset = 1.0;	
+	float height = fractalSimplexNoise(pos, noiseSize, offset); 
+	float colorNoise = fractalSimplexNoise(pos, colorNoiseSize, offset);
+	float colorNoiseGround = fractalSimplexNoise(pos, colorGroundNoiseSize, offset);
 	height = 2.0 * abs(mod(height, 1.0)-0.5); //this is the saw function
 	float heightStep = smoothstep(HGratio - 0.2, HGratio + 0.2, height); //smoothstep for antialiasing
 

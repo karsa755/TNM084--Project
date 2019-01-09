@@ -16,3 +16,19 @@ vec3 BlinnPhongShading(vec3 V, vec3 L, vec3 N)
 	
 	return shadedcolor;
 }
+
+// fractal noise 
+float fractalSimplexNoise(vec3 pos, float noiseSize, float offset)
+{
+	//return (snoise(pos / noiseSize) + 0.5*snoise(pos*2.0 / noiseSize) + 
+	//0.25*snoise(pos*4.0/ noiseSize) + 0.125*snoise(pos*8.0/ noiseSize));
+	const int n = 4;
+	float finalVal = 0.0;
+	for(int i = 1; i <= n; ++i)
+	{
+		float i_float = float(i);
+		finalVal += (1.0 / i_float) * snoise( (pos * i_float + offset) / noiseSize);  
+	}
+
+	return finalVal;
+}
