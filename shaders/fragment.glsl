@@ -19,7 +19,7 @@ uniform float colorGroundNoiseSize;
 
 void main()
 {
-	float offset = 1.0;	
+	float offset = 0.0;	
 	float height = fractalSimplexNoise(pos, noiseSize, offset); 
 	float colorNoise = fractalSimplexNoise(pos, colorNoiseSize, offset);
 	float colorNoiseGround = fractalSimplexNoise(pos, colorGroundNoiseSize, offset);

@@ -15,7 +15,7 @@ uniform vec3 cameraPos;
 
 void main() 
 {
-	float offset = 1.0;
+	float offset = 0.0;
 	vec3 extraPos = mat3(modelViewMatrix) * position;
 	lightDir = normalize( mat3(modelViewMatrix) * lightPos - extraPos);
 	interpolatedNormal = normalize(vec3(normalMatrix * vec3(normal) ));
