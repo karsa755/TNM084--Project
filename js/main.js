@@ -22,7 +22,7 @@ var sun, clouds, worldSphere, atmoSphereGround;
 var dTime = 0.0;
 var prevTime = 0.0;
 
-//these parameters were also found at http://jsfiddle.net/VsWb9/770/
+//these parameters were found at http://jsfiddle.net/VsWb9/770/
 var atmosphereVariables = {
     Kr: 0.0025,
     Km: 0.0010,
