@@ -1,7 +1,7 @@
 vec3 BlinnPhongShading(vec3 V, vec3 L, vec3 N)
 {
 	vec3 diffuseColor = vec3(0.5, 0.5, 0.5); // light from sun color
-	vec3 specularColor = vec3(0.51, 0.51, 0.51);
+	vec3 specularColor = vec3(0.25, 0.25, 0.25);
     float n = 20.0;   
 	n *= 4.0; //this is done to make n behave more like normal phong
 	float dotNL = max(dot(N, L), 0.0); 
